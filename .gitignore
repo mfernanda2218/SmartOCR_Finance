@@ -1,0 +1,104 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.python-version
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+pip-wheel-metadata/
+
+# ===== Virtual Environments =====
+.venv/
+venv/
+ENV/
+.envrc
+
+# ===== Environment Variables =====
+.env
+.env.local
+.env.*.local
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Logs =====
+logs/
+*.log
+*.log.*
+
+# ===== Local Databases =====
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# ===== Data (arquivos grandes) =====
+data/raw/*
+data/processed/*
+data/samples/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/samples/.gitkeep
+
+# ===== Models (arquivos de modelo) =====
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.h5
+models/*.pkl
+models/*.joblib
+models/*.ckpt
+models/*.safetensors
+models/*.pb
+models/*.tflite
+models/*.engine
+!models/.gitkeep
+
+# ===== ML/OCR artifacts =====
+artifacts/
+outputs/
+predictions/
+runs/
+
+# ===== Jupyter Notebooks checkpoints =====
+.ipynb_checkpoints/
+
+# ===== Coverage =====
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# ===== MyPy =====
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ===== Ruff =====
+.ruff_cache/
+
+# ===== pytest =====
+.pytest_cache/
+
+# ===== Other Python tooling =====
+.hypothesis/
+.nox/
+.tox/
+.pyre/
+.pytype/
