@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from typing import Tuple, Optional
 
-from utils.logger import log
+from smart_ocr_finance.utils.logger import log
 
 
 class ImageProcessor:

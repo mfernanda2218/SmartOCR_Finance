@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 from loguru import logger
-from config import settings
+from smart_ocr_finance.config.settings import settings
 
 def setup_logger():
     """

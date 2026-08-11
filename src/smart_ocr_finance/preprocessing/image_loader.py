@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from pathlib import Path
 
-from utils.logger import log
+from smart_ocr_finance.utils.logger import log
 
 
 class ImageLoader:

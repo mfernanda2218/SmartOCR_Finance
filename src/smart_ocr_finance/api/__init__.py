@@ -6,3 +6,7 @@ Responsável por expor os serviços de OCR via HTTP:
 - Retorno dos dados extraídos em JSON
 - Documentação automática (Swagger/ReDoc)
 """
+
+from .routes import router
+
+__all__ = ["router"]
