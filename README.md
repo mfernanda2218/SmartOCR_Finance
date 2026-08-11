@@ -1,154 +1,252 @@
-# 📄 SmartOCR Finance
+# SmartOCR Finance
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+Sistema em Python para extrair dados estruturados de documentos financeiros a partir de imagens, combinando pre-processamento com OpenCV, OCR com EasyOCR e parsing por expressoes regulares.
 
-> Sistema inteligente de extração automática de dados de documentos financeiros utilizando **Visão Computacional** e **OCR**.
+O projeto esta em fase de desenvolvimento e serve como base de estudo/portfolio em Visao Computacional, OCR, APIs e persistencia de dados.
 
----
+## Status Atual
 
-## 🎯 Sobre o Projeto
+Implementado:
 
-O **SmartOCR Finance** é um sistema de ponta a ponta para processar documentos financeiros brasileiros, extraindo informações estruturadas automaticamente a partir de imagens.
+- Pipeline de carregamento, validacao e pre-processamento de imagens.
+- Correcao de perspectiva quando um contorno de documento e detectado.
+- OCR com EasyOCR.
+- Parser para CPF, CNPJ, datas, valores monetarios e linhas digitaveis de boleto.
+- Validadores matematicos para CPF e CNPJ.
+- API FastAPI com endpoint de extracao.
+- Estrutura inicial de historico com SQLAlchemy, Repository e Alembic.
+- Testes unitarios para configuracao, OCR, processamento de imagem, parser, validadores, API e repositorio.
 
-### Documentos Suportados (Fase Inicial)
+Em evolucao:
 
-| Documento | Status |
-|---|---|
-| Boletos Bancários | 🔜 Em desenvolvimento |
-| Contas de Energia | 🔜 Em desenvolvimento |
-| Contas de Água | 🔜 Em desenvolvimento |
-| DARFs | 🔜 Em desenvolvimento |
+- Consolidacao dos namespaces entre `src/smart_ocr_finance/*` e os modulos novos em `src/*`.
+- Persistencia completa do historico integrada ao pipeline da API.
+- Interface web, Docker, testes end-to-end e modelos customizados.
 
-### Expansões Futuras
-
-- Notas Fiscais
-- CNH / RG / CPF
-- Outros documentos
-
----
-
-## 🏗️ Arquitetura
-
-```
-Imagem → Pré-processamento → OCR → Parsing → Validação → API/JSON
-         (OpenCV/NumPy)     (Tesseract/   (Regex/     (CPF/CNPJ/
-                             EasyOCR)    Heurísticas)  Barcode)
-```
-
----
-
-## 🛠️ Tecnologias
-
-| Categoria | Tecnologias |
-|---|---|
-| **Linguagem** | Python 3.10+ |
-| **Visão Computacional** | OpenCV, NumPy, Pillow |
-| **OCR** | Tesseract, EasyOCR |
-| **Deep Learning** | PyTorch, YOLOv8 |
-| **API** | FastAPI |
-| **Testes** | pytest, pytest-cov |
-| **Qualidade** | ruff, mypy, pre-commit |
-| **Infraestrutura** | Docker, Git, uv |
-| **Logging** | loguru |
-
----
-
-## 📁 Estrutura do Projeto
+## Pipeline
 
 ```text
-smart-ocr-finance/
-├── app/                  # Ponto de entrada da aplicação
-│   └── main.py           # Entry point principal
-├── src/                  # Código-fonte
-│   ├── preprocessing/    # Pré-processamento de imagens
-│   ├── ocr/              # Engines de OCR
-│   ├── parser/           # Extração de campos
-│   ├── validation/       # Validação dos dados
-│   ├── api/              # Endpoints FastAPI
-│   └── utils/            # Utilitários (config, logging)
-├── tests/                # Testes automatizados
-├── data/                 # Dados do projeto
-│   ├── raw/              # Imagens originais
-│   ├── processed/        # Imagens processadas
-│   └── samples/          # Imagens de exemplo
-├── models/               # Modelos treinados
-├── notebooks/            # Jupyter notebooks
-├── docs/                 # Documentação
-├── pyproject.toml        # Configuração do projeto
-├── requirements.txt      # Dependências
-├── Makefile              # Automação de tarefas
-└── README.md             # Este arquivo
+Imagem
+  -> carregamento e validacao
+  -> pre-processamento / correcao de perspectiva
+  -> OCR
+  -> parsing de texto
+  -> validacao
+  -> resposta JSON
+  -> historico em banco de dados
 ```
 
----
+## Tecnologias
 
-## 🚀 Instalação
+| Area | Ferramentas |
+|---|---|
+| Linguagem | Python 3.10+ |
+| API | FastAPI, Uvicorn, Pydantic |
+| Visao Computacional | OpenCV, NumPy, Pillow |
+| OCR | EasyOCR, pytesseract |
+| Banco de dados | SQLAlchemy, Alembic, SQLite/PostgreSQL |
+| Configuracao | python-dotenv, pydantic-settings |
+| Logs | loguru |
+| Testes | pytest, pytest-cov |
+| Qualidade | ruff, black, mypy, pre-commit |
+| Pacotes | uv, pyproject.toml |
 
-### Pré-requisitos
+## Estrutura
 
-- Python 3.10 ou superior
-- [uv](https://docs.astral.sh/uv/) (gerenciador de pacotes)
+```text
+SmartOCR_Finance/
+|-- app/
+|   `-- main.py                    # Ponto de entrada FastAPI
+|-- src/
+|   |-- smart_ocr_finance/         # Pacote principal do pipeline OCR
+|   |   |-- api/                   # Rotas/schemas da API inicial
+|   |   |-- config/                # Settings com pydantic-settings
+|   |   |-- ocr/                   # Engine EasyOCR
+|   |   |-- parser/                # Regex e extracao de campos
+|   |   |-- preprocessing/         # Leitura e tratamento de imagens
+|   |   |-- services/              # Orquestracao do pipeline
+|   |   |-- utils/                 # Logger e configuracoes auxiliares
+|   |   `-- validation/            # Validadores de documentos
+|   |-- api/                       # API com historico em banco
+|   |-- models/                    # Modelos SQLAlchemy
+|   |-- repositories/              # CRUD do historico
+|   `-- services/                  # Servicos com persistencia
+|-- alembic/                       # Migracoes de banco
+|-- data/
+|   |-- raw/                       # Imagens originais
+|   |-- processed/                 # Saidas processadas
+|   `-- samples/                   # Amostras para testes/experimentos
+|-- docs/                          # Documentacao complementar
+|-- models/                        # Modelos treinados ou baixados
+|-- notebooks/                     # Experimentos
+|-- tests/                         # Testes automatizados
+|-- pyproject.toml                 # Metadados, dependencias e ferramentas
+|-- requirements.txt               # Dependencias exportadas
+|-- Makefile                       # Comandos de automacao
+`-- README.md
+```
 
-### Passo a passo
+## Instalacao
+
+Pre-requisitos:
+
+- Python 3.10 ou superior.
+- `uv` instalado.
+- Dependencias nativas usadas por OCR/visao computacional. No Windows, confirme que as wheels de OpenCV, PyTorch/EasyOCR e Tesseract estao disponiveis para sua versao de Python.
+
+Passos:
 
 ```bash
-# 1. Clone o repositório
 git clone <url-do-repositorio>
 cd SmartOCR_Finance
 
-# 2. Crie o ambiente virtual e instale dependências
 uv venv
 uv pip install -e ".[dev,test]"
 
-# 3. Copie o arquivo de configuração
 cp .env.example .env
+```
 
-# 4. Verifique a instalação
+No Windows PowerShell, o equivalente para copiar o `.env` e:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+## Configuracao
+
+As principais variaveis ficam em `.env`:
+
+```env
+ENVIRONMENT=development
+LOG_LEVEL=DEBUG
+LOG_DIR=logs
+LOG_ROTATION=10 MB
+LOG_RETENTION=7 days
+OCR_ENGINE=tesseract
+OCR_LANGUAGE=por
+DATABASE_URL=sqlite:///./smartocr.db
+API_HOST=0.0.0.0
+API_PORT=8000
+```
+
+Observacao: o pipeline atual usa EasyOCR na engine principal. O valor `OCR_LANGUAGE=por` e mapeado para `pt` no EasyOCR, com `en` como idioma auxiliar.
+
+## Uso
+
+Executar a aplicacao:
+
+```bash
 python -m app.main
 ```
 
-### Comandos úteis (Makefile)
+Ou diretamente com Uvicorn:
 
 ```bash
-make install    # Instalar dependências
-make test       # Rodar testes
-make lint       # Verificar código
-make format     # Formatar código
-make run        # Executar o projeto
-make clean      # Limpar temporários
+uvicorn app.main:app --reload
 ```
 
----
+Quando a API estiver rodando, a documentacao interativa fica disponivel em:
 
-## 🗺️ Roadmap
+- `http://localhost:8000/docs`
+- `http://localhost:8000/redoc`
+
+### Endpoints
+
+| Metodo | Rota | Descricao |
+|---|---|---|
+| `GET` | `/` | Status basico da API |
+| `POST` | `/api/v1/extract` | Recebe uma imagem e retorna os dados extraidos |
+| `GET` | `/api/v1/history` | Lista registros de extracao salvos |
+| `GET` | `/api/v1/history/{record_id}` | Busca um registro por ID |
+| `DELETE` | `/api/v1/history/{record_id}` | Remove um registro do historico |
+
+Exemplo de upload:
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/extract" \
+  -F "file=@data/samples/boleto.png;type=image/png"
+```
+
+Resposta esperada:
+
+```json
+{
+  "cpfs": ["111.222.333-44"],
+  "cnpjs": [],
+  "dates": ["20/12/2023"],
+  "values": ["150,00"],
+  "boleto_lines": ["34191.09008 63396.873738 09516.480008 8 91320000015000"],
+  "raw_text": "..."
+}
+```
+
+## Banco de Dados
+
+O projeto tem suporte inicial a persistencia de extracoes:
+
+- Modelo ORM: `ExtractionRecord`.
+- Repositorio: `ExtractionRepository`.
+- Migracao inicial: `alembic/versions/0001_initial.py`.
+- Banco padrao: `sqlite:///./smartocr.db`.
+
+Comandos uteis:
+
+```bash
+alembic upgrade head
+alembic revision --autogenerate -m "descricao_da_migracao"
+```
+
+## Testes e Qualidade
+
+```bash
+make test
+make test-cov
+make lint
+make format
+make typecheck
+make check
+```
+
+Sem `make`, os comandos equivalentes sao:
+
+```bash
+pytest tests -v
+ruff check src app tests
+ruff format src app tests
+mypy src
+```
+
+## Roadmap
 
 | Fase | Tema | Status |
 |---|---|---|
-| 1 | Configuração do Projeto | ✅ Concluída |
-| 2 | Leitura de Imagens | ⏳ Pendente |
-| 3 | Pré-processamento | ⏳ Pendente |
-| 4 | Correção de Perspectiva | ⏳ Pendente |
-| 5 | OCR | ⏳ Pendente |
-| 6 | Extração de Campos | ⏳ Pendente |
-| 7 | Validação dos Dados | ⏳ Pendente |
-| 8 | API (FastAPI) | ⏳ Pendente |
-| 9 | Banco de Dados | ⏳ Pendente |
-| 10 | Interface Web | ⏳ Pendente |
-| 11 | Docker | ⏳ Pendente |
-| 12 | Testes End-to-End | ⏳ Pendente |
-| 13 | YOLO (Detecção) | ⏳ Pendente |
-| 14 | Treinamento de Modelos | ⏳ Pendente |
+| 1 | Configuracao do projeto | Concluida |
+| 2 | Leitura e validacao de imagens | Concluida |
+| 3 | Pre-processamento | Concluida |
+| 4 | Correcao de perspectiva | Concluida |
+| 5 | OCR | Concluida |
+| 6 | Extracao de campos | Concluida |
+| 7 | Validacao de dados | Em andamento |
+| 8 | API FastAPI | Em andamento |
+| 9 | Banco de dados e historico | Em andamento |
+| 10 | Interface web | Pendente |
+| 11 | Docker | Pendente |
+| 12 | Testes end-to-end | Pendente |
+| 13 | Deteccao com YOLO | Pendente |
+| 14 | Treinamento de modelos | Pendente |
 
----
+## Documentacao
 
-## 📝 Licença
+Arquivos complementares:
 
-Este projeto está licenciado sob a licença MIT — veja o arquivo [LICENSE](LICENSE) para detalhes.
+- `docs/arquitetura.md`
+- `docs/especificacoes_do_projeto.md`
+- `docs/fase_01_configuracao.md`
 
----
+## Licenca
 
-## 👤 Autor
+Projeto licenciado sob MIT. Veja `LICENSE`, se disponivel no repositorio.
 
-Desenvolvido como projeto de estudo e portfólio em Visão Computacional e IA.
+## Autor
+
+Desenvolvido como projeto de estudo e portfolio em Visao Computacional, OCR e IA aplicada a documentos financeiros.
