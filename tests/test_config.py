@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-from src.utils.config import Settings, BASE_DIR, DATA_DIR, MODELS_DIR
+from smart_ocr_finance.utils.config import Settings, BASE_DIR, DATA_DIR, MODELS_DIR
 
 
 class TestSettingsDefaults:

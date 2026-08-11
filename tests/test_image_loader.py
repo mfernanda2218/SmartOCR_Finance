@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 import cv2
 from pathlib import Path
-from .preprocessing.image_loader import ImageLoader
+from smart_ocr_finance.preprocessing.image_loader import ImageLoader
 
 @pytest.fixture
 def dummy_image_path(tmp_path):

@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from src.utils.config import Settings
+from smart_ocr_finance.utils.config import Settings
 
 
 @pytest.fixture

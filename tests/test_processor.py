@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 import cv2
-from .preprocessing.processor import ImageProcessor
+from smart_ocr_finance.preprocessing.processor import ImageProcessor
 
 
 @pytest.fixture
