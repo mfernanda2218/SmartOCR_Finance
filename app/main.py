@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from src.config import settings
-from src.utils import log
+from smart_ocr_finance.config.settings import settings
+from smart_ocr_finance.utils.logger import log
+from smart_ocr_finance.api.routes import router as api_router
 
 def create_app() -> FastAPI:
     """
@@ -11,6 +12,9 @@ def create_app() -> FastAPI:
         version=settings.VERSION,
         description="Sistema inteligente de extração de dados de documentos financeiros.",
     )
+
+    # Inclusão das rotas da API
+    app.include_router(api_router)
 
     @app.on_event("startup")
     async def startup_event():
