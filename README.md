@@ -13,14 +13,13 @@ Implementado:
 - OCR com EasyOCR.
 - Parser para CPF, CNPJ, datas, valores monetarios e linhas digitaveis de boleto.
 - Validadores matematicos para CPF e CNPJ.
-- API FastAPI com endpoint de extracao.
-- Estrutura inicial de historico com SQLAlchemy, Repository e Alembic.
+- API FastAPI completa com endpoints de extracao, historico, health check e estatisticas.
+- Banco de dados com SQLAlchemy, Repository pattern e Alembic.
+- Campos avancados no modelo: tipo de documento, status de processamento, score de confianca, metadados.
 - Testes unitarios para configuracao, OCR, processamento de imagem, parser, validadores, API e repositorio.
 
 Em evolucao:
 
-- Consolidacao dos namespaces entre `src/smart_ocr_finance/*` e os modulos novos em `src/*`.
-- Persistencia completa do historico integrada ao pipeline da API.
 - Interface web, Docker, testes end-to-end e modelos customizados.
 
 ## Pipeline
@@ -226,9 +225,9 @@ mypy src
 | 4 | Correcao de perspectiva | Concluida |
 | 5 | OCR | Concluida |
 | 6 | Extracao de campos | Concluida |
-| 7 | Validacao de dados | Em andamento |
-| 8 | API FastAPI | Em andamento |
-| 9 | Banco de dados e historico | Em andamento |
+| 7 | Validacao de dados | Concluida |
+| 8 | API FastAPI | Concluida |
+| 9 | Banco de dados e historico | Concluida |
 | 10 | Interface web | Pendente |
 | 11 | Docker | Pendente |
 | 12 | Testes end-to-end | Pendente |
@@ -239,9 +238,11 @@ mypy src
 
 Arquivos complementares:
 
-- `docs/arquitetura.md`
-- `docs/especificacoes_do_projeto.md`
-- `docs/fase_01_configuracao.md`
+- `docs/arquitetura.md` - Arquitetura do sistema e pipeline
+- `docs/especificacoes_do_projeto.md` - Especificações detalhadas do projeto
+- `docs/fase_01_configuracao.md` - Documentação da Fase 1
+- `docs/fase_08_09_api_banco_completo.md` - Documentação completa das Fases 8 e 9 (API e Banco de Dados)
+- `docs/plano_implementacao_fases_restantes.md` - Plano detalhado para fases 10-14
 
 ## Licenca
 
