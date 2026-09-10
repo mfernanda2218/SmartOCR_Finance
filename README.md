@@ -17,10 +17,13 @@ Implementado:
 - Banco de dados com SQLAlchemy, Repository pattern e Alembic.
 - Campos avancados no modelo: tipo de documento, status de processamento, score de confianca, metadados.
 - Testes unitarios para configuracao, OCR, processamento de imagem, parser, validadores, API e repositorio.
+- Interface web React com Vite e Tailwind CSS.
+- Componentes de upload, resultados, estatisticas e historico.
+- Integracao completa entre frontend e backend.
 
 Em evolucao:
 
-- Interface web, Docker, testes end-to-end e modelos customizados.
+- Docker, testes end-to-end e modelos customizados.
 
 ## Pipeline
 
@@ -69,7 +72,21 @@ SmartOCR_Finance/
 |   |-- api/                       # API com historico em banco
 |   |-- models/                    # Modelos SQLAlchemy
 |   |-- repositories/              # CRUD do historico
-|   `-- services/                  # Servicos com persistencia
+|   |-- services/                  # Servicos com persistencia
+|   |-- preprocessing/             # Modulos de processamento de imagem
+|   |-- ocr/                       # Engine OCR
+|   |-- parser/                    # Parser de campos
+|   |-- utils/                     # Utilitarios e logger
+|   `-- config/                    # Configuracoes centralizadas
+|-- frontend/                      # Interface web React
+|   |-- src/
+|   |   |-- components/           # Componentes React
+|   |   |-- services/              # Servico de API
+|   |   |-- App.jsx               # Componente principal
+|   |   `-- main.jsx              # Entry point
+|   |-- package.json              # Dependencias Node.js
+|   |-- tailwind.config.js        # Configuracao Tailwind
+|   `-- vite.config.js            # Configuracao Vite
 |-- alembic/                       # Migracoes de banco
 |-- data/
 |   |-- raw/                       # Imagens originais
@@ -132,6 +149,8 @@ Observacao: o pipeline atual usa EasyOCR na engine principal. O valor `OCR_LANGU
 
 ## Uso
 
+### Backend (API)
+
 Executar a aplicacao:
 
 ```bash
@@ -148,6 +167,22 @@ Quando a API estiver rodando, a documentacao interativa fica disponivel em:
 
 - `http://localhost:8000/docs`
 - `http://localhost:8000/redoc`
+
+### Frontend (Interface Web)
+
+Executar o frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+A interface web ficara disponivel em:
+
+- `http://localhost:5173`
+
+A interface web se comunica automaticamente com a API em `http://localhost:8000`.
 
 ### Endpoints
 
@@ -228,7 +263,7 @@ mypy src
 | 7 | Validacao de dados | Concluida |
 | 8 | API FastAPI | Concluida |
 | 9 | Banco de dados e historico | Concluida |
-| 10 | Interface web | Pendente |
+| 10 | Interface web | Concluida |
 | 11 | Docker | Pendente |
 | 12 | Testes end-to-end | Pendente |
 | 13 | Deteccao com YOLO | Pendente |
