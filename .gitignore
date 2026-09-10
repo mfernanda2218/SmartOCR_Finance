@@ -96,6 +96,12 @@ dmypy.json
 # ===== pytest =====
 .pytest_cache/
 
+# ===== Node.js / Frontend =====
+frontend/node_modules/
+frontend/dist/
+frontend/.cache/
+frontend/build/
+
 # ===== Other Python tooling =====
 .hypothesis/
 .nox/
