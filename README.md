@@ -277,7 +277,8 @@ Arquivos complementares:
 - `docs/especificacoes_do_projeto.md` - Especificações detalhadas do projeto
 - `docs/fase_01_configuracao.md` - Documentação da Fase 1
 - `docs/fase_08_09_api_banco_completo.md` - Documentação completa das Fases 8 e 9 (API e Banco de Dados)
-- `docs/plano_implementacao_fases_restantes.md` - Plano detalhado para fases 10-14
+- `docs/fase_10_interface_web_react.md` - Documentação completa da Fase 10 (Interface Web React)
+- `docs/plano_implementacao_fases_restantes.md` - Plano detalhado para fases 11-14
 
 ## Licenca
 
