@@ -25,6 +25,61 @@ Em evolucao:
 
 - Docker, testes end-to-end e modelos customizados.
 
+## 🧪 Testes
+
+### Executar Testes
+```bash
+# Todos os testes com cobertura
+pytest tests/ -v --tb=short --cov=src --cov=app --cov-report=html
+
+# Testes rápidos (sem cobertura)
+pytest tests/ -v --tb=short
+
+# Usar scripts
+./scripts/run_tests.sh          # Linux/Mac
+scripts\run_tests.bat           # Windows
+```
+
+### Configuração de Banco de Dados para Testes
+
+**Opção 1: SQLite em Memória (Padrão)**
+```bash
+# Não precisa de configuração
+pytest tests/ -v
+```
+
+**Opção 2: PostgreSQL Local**
+```bash
+# Criar banco
+createdb smartocr_test
+
+# Configurar variável
+export TEST_DATABASE_URL="postgresql://usuario:senha@localhost:5432/smartocr_test"
+
+# Executar testes
+pytest tests/ -v
+```
+
+**Opção 3: PostgreSQL com Docker**
+```bash
+# Iniciar container
+docker run -d --name smartocr-test-db \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=smartocr_test \
+  -p 5433:5432 \
+  postgres:15-alpine
+
+# Configurar e executar
+export TEST_DATABASE_URL="postgresql://postgres:postgres@localhost:5433/smartocr_test"
+pytest tests/ -v
+```
+
+### Documentação de Testes
+- [Guia Completo de Testes](docs/guia_testes.md) - Documentação detalhada de como testar cada módulo
+- [README de Testes](tests/README.md) - Guia rápido e referência
+- [Template de Testes](tests/test_template.py) - Template para criar novos testes
+- [Exemplos PostgreSQL](tests/test_postgres_example.py) - Exemplos práticos com PostgreSQL
+
 ## Pipeline
 
 ```text
