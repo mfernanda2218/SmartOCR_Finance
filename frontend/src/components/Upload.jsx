@@ -1,8 +1,10 @@
 import { useState, useCallback } from 'react';
-import { Upload, FileText, AlertCircle, CheckCircle, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Upload as UploadIcon, FileText, AlertCircle, CheckCircle, X } from 'lucide-react';
 import { apiService } from '../services/api';
 
-export default function Upload({ onUploadSuccess }) {
+export default function Upload() {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -34,8 +36,9 @@ export default function Upload({ onUploadSuccess }) {
     try {
       const data = await apiService.uploadImage(file);
       setResult(data);
-      if (onUploadSuccess) {
-        onUploadSuccess(data);
+      // Navegar para a página de resultados após o upload bem-sucedido
+      if (data.id) {
+        navigate(`/results/${data.id}`);
       }
     } catch (err) {
       setError(err.message || 'Erro ao processar imagem');
@@ -54,7 +57,7 @@ export default function Upload({ onUploadSuccess }) {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-        <Upload className="w-6 h-6" />
+        <UploadIcon className="w-6 h-6" />
         Upload de Documento
       </h2>
 
@@ -71,7 +74,7 @@ export default function Upload({ onUploadSuccess }) {
             htmlFor="file-upload"
             className="cursor-pointer flex flex-col items-center gap-4"
           >
-            <Upload className="w-16 h-16 text-gray-400" />
+            <UploadIcon className="w-16 h-16 text-gray-400" />
             <div>
               <p className="text-lg font-medium text-gray-700">
                 Clique ou arraste uma imagem aqui
@@ -122,7 +125,7 @@ export default function Upload({ onUploadSuccess }) {
               </>
             ) : (
               <>
-                <Upload className="w-5 h-5" />
+                <UploadIcon className="w-5 h-5" />
                 Processar Documento
               </>
             )}

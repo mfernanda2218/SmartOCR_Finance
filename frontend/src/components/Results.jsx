@@ -1,6 +1,64 @@
-import { FileText, Calendar, DollarSign, CreditCard, Hash } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { FileText, Calendar, DollarSign, CreditCard, Hash, AlertCircle } from 'lucide-react';
+import { apiService } from '../services/api';
 
-export default function Results({ data }) {
+export default function Results() {
+  const { id } = useParams();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const record = await apiService.getRecordById(id);
+        setData(record);
+        setError(null);
+      } catch (err) {
+        setError('Erro ao carregar resultados');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      loadData();
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <FileText className="w-6 h-6" />
+          Resultados da Extração
+        </h2>
+        <div className="animate-pulse space-y-4">
+          <div className="h-32 bg-gray-200 rounded"></div>
+          <div className="h-32 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <FileText className="w-6 h-6" />
+          Resultados da Extração
+        </h2>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 text-red-500" />
+          <p className="text-red-800">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!data) return null;
 
   const {
@@ -10,8 +68,20 @@ export default function Results({ data }) {
     values = [],
     boleto_lines = [],
     raw_text = '',
-    metadata = {}
+    document_type = '',
+    processing_status = '',
+    confidence_score = 0,
+    processing_time_ms = 0,
+    warnings = []
   } = data;
+
+  const metadata = {
+    document_type,
+    processing_status,
+    confidence_score,
+    processing_time_ms,
+    warnings
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">

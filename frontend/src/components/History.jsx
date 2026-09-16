@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { History, Trash2, Eye, Calendar, FileText, AlertCircle } from 'lucide-react';
+import { History as HistoryIcon, Trash2, Eye, Calendar, FileText, AlertCircle } from 'lucide-react';
 import { apiService } from '../services/api';
 
 export default function History({ refreshTrigger }) {
@@ -55,7 +55,7 @@ export default function History({ refreshTrigger }) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-          <History className="w-6 h-6" />
+          <HistoryIcon className="w-6 h-6" />
           Histórico
         </h2>
         <div className="animate-pulse space-y-4">
@@ -71,7 +71,7 @@ export default function History({ refreshTrigger }) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-          <History className="w-6 h-6" />
+          <HistoryIcon className="w-6 h-6" />
           Histórico
         </h2>
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
@@ -85,13 +85,13 @@ export default function History({ refreshTrigger }) {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-        <History className="w-6 h-6" />
+        <HistoryIcon className="w-6 h-6" />
         Histórico de Extrações
       </h2>
 
       {records.length === 0 ? (
         <div className="text-center py-12 text-gray-500">
-          <History className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+          <HistoryIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <p>Nenhum registro encontrado</p>
         </div>
       ) : (
