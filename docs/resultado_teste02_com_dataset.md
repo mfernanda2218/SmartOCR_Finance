@@ -1,0 +1,7 @@
+# Segundo teste — imagens com ruído
+
+Foi realizado um segundo teste utilizando imagens do dataset CORD com diferentes níveis de ruído e distorção: leve, médio e severo. Os resultados demonstraram uma redução consistente no desempenho do pipeline conforme a qualidade das imagens foi degradada, com taxas médias de acerto de 43,3% (leve), 35,6% (médio) e 17,7% (severo), considerando 15 imagens em cada nível. Esse comportamento está de acordo com o esperado, indicando que o aumento da distorção das imagens impacta negativamente a capacidade de extração dos valores monetários.
+
+Durante a análise dos logs, também foi identificado um possível gargalo na etapa de **correção de perspectiva**. A detecção do contorno do documento apresentou baixa taxa de sucesso, ocorrendo em aproximadamente 6 das 45 tentativas analisadas. Na maioria dos casos, o sistema não conseguiu identificar o contorno e prosseguiu utilizando a imagem original. Isso indica que a etapa de fix_perspective pode apresentar limitações diante das características das imagens do CORD, especialmente por serem fotografias de recibos com fundos e condições de captura variados.
+
+Assim, o teste permitiu não apenas observar a degradação esperada do desempenho diante do aumento do ruído, mas também identificar a correção de perspectiva como um ponto a ser investigado e aprimorado nos próximos ajustes do protótipo.
