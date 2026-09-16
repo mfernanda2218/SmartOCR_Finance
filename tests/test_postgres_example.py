@@ -20,6 +20,25 @@ POSTGRES_TEST_URL = os.getenv(
 )
 
 
+def postgresql_available():
+    """Verifica se o PostgreSQL está disponível para testes."""
+    try:
+        engine = create_engine(POSTGRES_TEST_URL, connect_args={"connect_timeout": 5})
+        connection = engine.connect()
+        connection.close()
+        engine.dispose()
+        return True
+    except Exception:
+        return False
+
+
+# Skip todos os testes PostgreSQL se não estiver disponível
+pytestmark = pytest.mark.skipif(
+    not postgresql_available(),
+    reason="PostgreSQL não está disponível. Configure TEST_DATABASE_URL ou inicie o servidor PostgreSQL."
+)
+
+
 @pytest.fixture(scope="session")
 def postgres_engine():
     """

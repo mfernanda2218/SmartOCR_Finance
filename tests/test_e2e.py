@@ -29,6 +29,7 @@ def test_db():
     yield session
     session.close()
     Base.metadata.drop_all(bind=engine)
+    engine.dispose()
 
 
 @pytest.fixture
@@ -53,7 +54,10 @@ async def test_full_extraction_flow(sample_boleto_image, mock_ocr_service, test_
     
     # Configurar mock para o repositório
     def override_get_db():
-        yield test_db
+        try:
+            yield test_db
+        finally:
+            pass
     
     app.dependency_overrides[get_db] = override_get_db
     
@@ -146,7 +150,10 @@ async def test_history_endpoint_pagination(test_db):
         )
     
     def override_get_db():
-        yield test_db
+        try:
+            yield test_db
+        finally:
+            pass
     
     app.dependency_overrides[get_db] = override_get_db
     
@@ -183,7 +190,10 @@ async def test_delete_record_flow(test_db):
     )
     
     def override_get_db():
-        yield test_db
+        try:
+            yield test_db
+        finally:
+            pass
     
     app.dependency_overrides[get_db] = override_get_db
     
@@ -211,7 +221,10 @@ async def test_stats_endpoint(test_db):
     repo.save("c.png", "txt", ["987.654.321-00"], [], ["25/09/2026"], ["300.00"], [])
     
     def override_get_db():
-        yield test_db
+        try:
+            yield test_db
+        finally:
+            pass
     
     app.dependency_overrides[get_db] = override_get_db
     

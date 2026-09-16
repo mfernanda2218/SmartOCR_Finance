@@ -15,9 +15,10 @@ Conceitos:
 
 from pathlib import Path
 from io import BytesIO
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import cv2
+from typing import Optional
 
 import pytest
 from sqlalchemy import create_engine
@@ -78,6 +79,24 @@ def sample_image_bytes():
 
 
 @pytest.fixture
+def sample_image_bytes_custom(size: tuple = (100, 100), color: str = 'red'):
+    """Cria uma imagem de teste customizada em bytes.
+
+    Args:
+        size: Tupla (width, height) da imagem.
+        color: Cor da imagem em formato RGB ou nome de cor.
+
+    Returns:
+        Bytes de uma imagem PNG de teste customizada.
+    """
+    img = Image.new('RGB', size, color=color)
+    img_bytes = BytesIO()
+    img.save(img_bytes, format='PNG')
+    img_bytes.seek(0)
+    return img_bytes.read()
+
+
+@pytest.fixture
 def sample_boleto_image():
     """Cria uma imagem simulando um boleto para testes.
 
@@ -87,7 +106,6 @@ def sample_boleto_image():
     img = Image.new('RGB', (400, 600), color='white')
     
     # Adicionar alguns elementos para simular um boleto
-    from PIL import ImageDraw, ImageFont
     draw = ImageDraw.Draw(img)
     
     # Linhas do boleto
@@ -112,6 +130,50 @@ def sample_boleto_image():
     return img_bytes.read()
 
 
+@pytest.fixture
+def sample_document_image():
+    """Cria uma imagem simulando um documento genérico.
+
+    Returns:
+        Bytes de uma imagem PNG simulando um documento.
+    """
+    img = Image.new('RGB', (300, 400), color='white')
+    draw = ImageDraw.Draw(img)
+    
+    # Borda do documento
+    draw.rectangle([10, 10, 290, 390], outline='black', width=2)
+    
+    # Linhas de texto simuladas
+    for i in range(10):
+        y = 50 + i * 30
+        draw.rectangle([30, y, 270, y + 15], fill='gray')
+    
+    img_bytes = BytesIO()
+    img.save(img_bytes, format='PNG')
+    img_bytes.seek(0)
+    return img_bytes.read()
+
+
+@pytest.fixture
+def numpy_image_color():
+    """Cria uma imagem numpy colorida para testes.
+
+    Returns:
+        Array numpy (100x100x3) BGR.
+    """
+    return np.zeros((100, 100, 3), dtype=np.uint8)
+
+
+@pytest.fixture
+def numpy_image_grayscale():
+    """Cria uma imagem numpy em escala de cinza para testes.
+
+    Returns:
+        Array numpy (100x100) grayscale.
+    """
+    return np.zeros((100, 100), dtype=np.uint8)
+
+
 @pytest.fixture(scope="function")
 def db_session():
     """Cria um banco de dados em memória isolado para cada teste.
@@ -127,6 +189,7 @@ def db_session():
     yield session
     session.close()
     Base.metadata.drop_all(bind=engine)
+    engine.dispose()
 
 
 @pytest.fixture
@@ -144,3 +207,125 @@ def clean_database(db_session):
     yield db_session
     db_session.query(ExtractionRecord).delete()
     db_session.commit()
+
+
+@pytest.fixture
+def mock_ocr_result():
+    """Retorna um resultado mockado do OCR para testes.
+
+    Returns:
+        Dicionário com estrutura padrão de resultado OCR.
+    """
+    return {
+        "cpfs": ["123.456.789-00"],
+        "cnpjs": [],
+        "dates": ["15/09/2026"],
+        "values": ["1.250,00"],
+        "boleto_lines": [],
+        "raw_text": "CPF: 123.456.789-00\nVencimento: 15/09/2026\nValor: R$ 1.250,00",
+        "metadata": {
+            "document_type": "boleto",
+            "processing_status": "success",
+            "confidence_score": 0.95,
+            "processing_time_ms": 1500,
+            "warnings": []
+        }
+    }
+
+
+@pytest.fixture
+def sample_text_data():
+    """Retorna texto de exemplo com dados financeiros.
+
+    Returns:
+        String com texto contendo CPF, CNPJ, datas e valores.
+    """
+    return """
+    CONTA DE ENERGIA
+    =================
+    Cliente: João Silva
+    CPF: 123.456.789-00
+    CNPJ: 12.345.678/0001-90 (se aplicável)
+    
+    Referência: Setembro/2026
+    Vencimento: 15/09/2026
+    Valor a pagar: R$ 250,50
+    
+    Linha digitável: 34191.09008 63396.873738 09516.480008 8 91320000015000
+    """
+
+
+@pytest.fixture
+def various_cpf_samples():
+    """Retorna uma lista de CPFs para testes.
+
+    Returns:
+        Lista de CPFs em diferentes formatos.
+    """
+    return [
+        "52998224725",           # Sem formatação
+        "529.982.247-25",        # Com formatação
+        "111.111.111-11",        # Inválido (todos iguais)
+        "123.456.789-00",        # Inválido
+    ]
+
+
+@pytest.fixture
+def various_cnpj_samples():
+    """Retorna uma lista de CNPJs para testes.
+
+    Returns:
+        Lista de CNPJs em diferentes formatos.
+    """
+    return [
+        "11444777000161",        # Sem formatação
+        "11.444.777/0001-61",    # Com formatação
+        "11.111.111/1111-11",    # Inválido (todos iguais)
+        "12.345.678/0001-99",    # Inválido
+    ]
+
+
+@pytest.fixture
+def various_date_samples():
+    """Retorna uma lista de datas em diferentes formatos.
+
+    Returns:
+        Lista de datas em diferentes formatos.
+    """
+    return [
+        "15/09/2026",            # Formato brasileiro
+        "15-09-2026",            # Com hífens
+        "2026/09/15",            # Formato ISO
+        "15.09.2026",            # Com pontos
+        "September 15, 2026",    # Inglês
+    ]
+
+
+@pytest.fixture
+def various_value_samples():
+    """Retorna uma lista de valores monetários em diferentes formatos.
+
+    Returns:
+        Lista de valores em diferentes formatos.
+    """
+    return [
+        "R$ 1.250,00",           # Com R$ e pontos
+        "R$ 1250,00",            # Com R$ sem pontos
+        "1.250,00",              # Sem R$ com pontos
+        "1250,00",               # Sem R$ sem pontos
+        "R$ 1250",               # Sem centavos
+    ]
+
+
+# Configuração para pular testes que requerem dependências externas
+def pytest_configure(config):
+    """Configura hooks personalizados do pytest."""
+    config.addinivalue_line(
+        "markers", "slow: marca testes que são lentos e podem ser skipados"
+    )
+    config.addinivalue_line(
+        "markers", "integration: marca testes de integração"
+    )
+    config.addinivalue_line(
+        "markers", "requires_postgres: marca testes que requerem PostgreSQL"
+    )

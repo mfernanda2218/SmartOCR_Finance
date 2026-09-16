@@ -48,6 +48,10 @@ def test_load_image_from_bytes_invalid():
     img = ImageLoader.load_image_from_bytes(b"invalid data")
     assert img is None
 
+def test_load_image_from_bytes_empty():
+    img = ImageLoader.load_image_from_bytes(b"")
+    assert img is None
+
 def test_save_image(tmp_path):
     img = np.zeros((50, 50, 3), dtype=np.uint8)
     save_path = tmp_path / "saved_img.png"
@@ -56,8 +60,27 @@ def test_save_image(tmp_path):
     assert success is True
     assert save_path.exists()
 
+def test_save_image_creates_directory(tmp_path):
+    img = np.zeros((50, 50, 3), dtype=np.uint8)
+    save_path = tmp_path / "subdir" / "nested" / "saved_img.png"
+    
+    success = ImageLoader.save_image(img, save_path)
+    assert success is True
+    assert save_path.exists()
+
+def test_save_image_invalid_array(tmp_path):
+    img = "not an image"
+    save_path = tmp_path / "invalid.png"
+    
+    success = ImageLoader.save_image(img, save_path)
+    assert success is False
+
 def test_validate_image_valid():
     img = np.zeros((10, 10, 3), dtype=np.uint8)
+    assert ImageLoader.validate_image(img) is True
+
+def test_validate_image_grayscale():
+    img = np.zeros((10, 10), dtype=np.uint8)
     assert ImageLoader.validate_image(img) is True
 
 def test_validate_image_empty():
@@ -67,3 +90,20 @@ def test_validate_image_empty():
 def test_validate_image_not_numpy():
     img = [[0, 0], [0, 0]]
     assert ImageLoader.validate_image(img) is False
+
+def test_validate_image_1d():
+    img = np.array([1, 2, 3, 4])
+    assert ImageLoader.validate_image(img) is False
+
+def test_validate_image_different_formats():
+    # Teste RGB
+    img_rgb = np.zeros((10, 10, 3), dtype=np.uint8)
+    assert ImageLoader.validate_image(img_rgb) is True
+    
+    # Teste RGBA
+    img_rgba = np.zeros((10, 10, 4), dtype=np.uint8)
+    assert ImageLoader.validate_image(img_rgba) is True
+    
+    # Teste grayscale
+    img_gray = np.zeros((10, 10), dtype=np.uint8)
+    assert ImageLoader.validate_image(img_gray) is True

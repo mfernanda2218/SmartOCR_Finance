@@ -223,7 +223,8 @@ def test_api_response_performance():
                     "document_type": "boleto",
                     "processing_status": "success",
                     "confidence_score": 0.95,
-                    "processing_time_ms": 50
+                    "processing_time_ms": 50,
+                    "warnings": []
                 }
             }
     

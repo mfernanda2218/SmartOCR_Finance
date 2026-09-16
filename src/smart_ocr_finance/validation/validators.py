@@ -11,6 +11,9 @@ class DocumentValidator:
         """
         Valida o dígito verificador do CPF.
         """
+        if not cpf or not isinstance(cpf, str):
+            return False
+            
         cpf_clean = re.sub(r'[^0-9]', '', cpf)
         if len(cpf_clean) != 11 or cpf_clean == cpf_clean[0] * 11:
             log.warning(f"CPF inválido (formato/tamanho incorreto): {cpf}")

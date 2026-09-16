@@ -35,14 +35,20 @@ def test_extract_endpoint_invalid_mime():
 def test_extract_endpoint_success(dummy_image_bytes, monkeypatch):
     # Faz o mock do serviço OCR para não instanciar o EasyOCR (peso na rede/memória)
     class MockOCRService:
-        def process_image(self, img_bytes):
+        def process_image(self, img_bytes, filename=None, db=None):
             return {
                 "cpfs": ["111.111.111-11"],
                 "cnpjs": [],
                 "dates": ["10/10/2023"],
                 "values": ["1.000,00"],
                 "boleto_lines": [],
-                "raw_text": "Texto extraído mock"
+                "raw_text": "Texto extraído mock",
+                "metadata": {
+                    "document_type": "boleto",
+                    "processing_status": "success",
+                    "confidence_score": 0.95,
+                    "processing_time_ms": 1500
+                }
             }
             
     # Sobrescreve a dependência na API

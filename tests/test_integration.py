@@ -69,7 +69,8 @@ def test_integration_api_with_database(integration_repo, mock_ocr_service_integr
                     "document_type": "boleto",
                     "processing_status": "success",
                     "confidence_score": 0.95,
-                    "processing_time_ms": 1500
+                    "processing_time_ms": 1500,
+                    "warnings": []
                 }
             }
     
